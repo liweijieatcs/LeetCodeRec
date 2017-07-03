@@ -1,0 +1,81 @@
+思路：
+1：求出所有的字串。
+2：在求出的字串中找到最大长度
+
+第1次想法：
+1:将所有的字串存在在一个数组中。
+2:然后再再数组中找到字串的长度组成数组2
+3:在数组2中找到最大字串长度，然后返回。
+
+实现了一遍，提交答案是，总是出现数组越界的警告，为什么呢？这里在第一步将所有的字串存储在数组中时
+开辟的数组空间是不确定的。所有不好掌握，结果可想而知当然是不通过了。
+--------------------------------------------------------------------------------
+解答如下：
+#include <string>
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+class Solution {
+public:
+	int lengthOfLongestSubstring(string s)
+	{
+		string sub[500];／／此处数组定义不确定，大小未知。
+		unsigned int i = 0;
+		unsigned int j = 0;
+		unsigned int k = 0;
+		unsigned int index = 0;
+		unsigned int maxLength = 0;
+		bool addFlag = false;
+
+		for (i = 0; i < s.length(); i++)
+		{
+			sub[index] = s.at(i);
+			for (j = i + 1; j < s.length(); j++)
+			{
+				//判断是否有相同的字符
+				for (k = 0; k < sub[index].length(); k++)
+				{
+					if (s.at(j) != sub[index].at(k))
+					{
+						addFlag = true;
+					}
+					else
+					{
+						addFlag = false;
+						break;
+					}
+				}
+
+				if (addFlag == true)
+				{
+					sub[index] += s.at(j);
+					addflag = false;
+				}
+				else
+				{
+					index++;
+					addFlag = false;
+					break;
+				}
+			}
+			if (j == s.length())
+			{
+				index++;
+			}
+		}
+
+		for (i = 0; i < index; i++)
+		{
+			if (sub[i].length() > maxLength)
+			{
+				maxLength = sub[i].length();
+			}
+		}
+		return maxLength;
+	}
+};
+--------------------------------------------------------------------------------
+第2次的想法：当找到一个最大字串时，就记录下来，并计算长度，如果后续还有比这个字串长度长的，再更新。
+结果当然妥妥的
