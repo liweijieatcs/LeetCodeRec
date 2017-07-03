@@ -1,0 +1,39 @@
+题目提示用vector实现，那就用vector实现。
+思路：
+1:将两个数组链接成一个数组。
+2:如果数组中的元素是奇数，则返回中间那个，如果数组中的元素是偶数，则返回中间两个相加除以2.
+
+
+解答如下：
+--------------------------------------------------------------------------------
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+
+        vector<int>num;
+        double averageValue = 0;
+
+        num.insert(num.begin(), nums1.begin(),nums1.end());
+        num.insert(num.end(), nums2.begin(), nums2.end());
+
+        sort(num.begin(), num.end());
+
+        if (num.size() % 2 == 0)
+        {
+            averageValue = (double(num.at(num.size()/2)) + double(num.at(num.size()/2 - 1)))/2;
+        }
+        else {
+            averageValue = double(num.at(num.size()/2));
+        }
+
+        return averageValue;
+    }
+};
+--------------------------------------------------------------------------------
+
+不知道为何把这道题设置成hard.
