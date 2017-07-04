@@ -8,7 +8,45 @@ Determine whether an integer is a palindrome. Do this without extra space.
 1:整数可能是个负数，比如 -1。
 2:int类型的整数越界问题
 
+大坑：实现了好多遍，总是有几个case过不来了，到处查资料，OJ把负数全部返回false,真是无语，还是我
+对回数理解有问题。根本不用考虑负数的问题。
+
 代码实现如下：
 --------------------------------------------------------------------------------
 
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        bool outputFlag = false;
+
+        //spec case
+        if (x < 0) {
+            return false;
+        }
+
+        //1:translate integer to string
+        string output = "";
+        output = to_string(x);
+        unsigned long strLen = output.length();
+
+        if (output.length() == 0) {
+            return false;
+        } else if (strLen == 1){
+            return true;
+        }
+        //2:judge the string is palindrome
+
+        for (unsigned long i = 0; i < strLen / 2; i++) {
+            if (output[i] == output[strLen - i - 1]) {
+                outputFlag = true;
+            } else {
+                outputFlag = false;
+                break;
+            }
+        }
+
+        //3:return the result
+        return outputFlag;
+    }
+};
 --------------------------------------------------------------------------------
