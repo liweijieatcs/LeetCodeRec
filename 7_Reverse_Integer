@@ -1,0 +1,18 @@
+先读懂题目：
+Example1: x = 123, return 321
+Example2: x = -123, return -321
+
+click to show spoilers.
+
+Note:
+The input is assumed to be a 32-bit signed integer. Your function should return 0 when the reversed integer overflows.
+
+理解：
+1：32位有符号的整数，可以是整数，可以是负数。负数翻转完后还有带负号。
+2：32位整数翻转完后，还有可能越界，如果越界就返回0，如何判断越界呢？
+3：如果这个数为100，或者1000，翻转完后都应该是1.
+
+可否分开讨论。
+1：正数
+2：负数（乘以-1.转化为正数，翻转完再乘以-1转回来）
+3：越界的数。
