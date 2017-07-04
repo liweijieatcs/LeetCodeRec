@@ -60,3 +60,44 @@ for (int row = 0; row < numRows; ++row)
         }
     }
 }
+
+完整的实现：
+--------------------------------------------------------------------------------
+
+#include <string>
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+class Solution {
+public:
+	string convert(string s, int numRows) {
+		string output = "";
+		int len = s.length();
+
+		if (numRows == 1)
+		{
+			return s;
+		}
+
+		for (int row = 0; row < numRows; ++row)
+		{
+			//processing row by row using (2*numRows-2) rule
+			for (unsigned int index = row; index < len; index += 2 * numRows - 2)
+			{
+				// if it is the first row or the last row, then this is all
+				output += s[index];
+				// otherwise, there are middle values, using (2numRows-2-2*row) rule
+				// notice that nRows-1 is the last row
+				if ((row > 0) & (row < numRows - 1) & ((index + 2 * numRows - 2 - 2 * row) < len))
+				{
+					output += s[index + 2 * numRows - 2 - 2 * row];
+				}
+			}
+		}
+
+		return output;
+	}
+};
+--------------------------------------------------------------------------------
