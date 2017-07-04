@@ -79,3 +79,57 @@ public:
 --------------------------------------------------------------------------------
 第2次的想法：当找到一个最大字串时，就记录下来，并计算长度，如果后续还有比这个字串长度长的，再更新。
 结果当然妥妥的
+#include <string>
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+class Solution {
+public:
+	int lengthOfLongestSubstring(string s)
+	{
+		string subString = "";
+		unsigned int i = 0;
+		unsigned int j = 0;
+		unsigned int k = 0;
+		unsigned int maxLength = 0;
+		bool addFlag = false;
+
+		for (i = 0; i < s.length(); i++)
+		{
+			subString = s.at(i);
+			for (j = i + 1; j < s.length(); j++)
+			{
+				for (k = 0; k < subString.length(); k++)
+				{
+					if (s.at(j) != subString.at(k))
+					{
+						addFlag = true;
+					}
+					else
+					{
+						addFlag = false;
+						break;
+					}
+				}
+				if (addFlag == true)
+				{
+					subString += s.at(j);
+					addFlag = false;
+				}
+				else
+				{
+					addFlag = false;
+					break;
+				}
+			}
+			//求出最大子串的长度
+			if (maxLength < subString.length())
+			{
+				maxLength = subString.length();
+			}
+		}
+		return maxLength;
+	}
+};
