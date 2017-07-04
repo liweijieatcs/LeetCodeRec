@@ -16,3 +16,81 @@ The input is assumed to be a 32-bit signed integer. Your function should return 
 1：正数
 2：负数（乘以-1.转化为正数，翻转完再乘以-1转回来）
 3：越界的数。
+
+思路：
+1：将整数先转化成字符串。
+2：对字符串进行翻转。
+3：将翻转后的字符串转化成整数。
+
+需要用到的函数为itoa  atoi
+itoa char *  itoa ( int value, char * str, int base );
+Convert integer to string (non-standard function)
+
+atoi Convert string to integer (function )
+
+提交答案：在本地测试用例是好用的，不知为何在OJ上测试不好用。先把答案留下，改日找问题
+--------------------------------------------------------------------------------
+
+#include <string>
+#include <iostream>
+#include <stdlib.h>
+
+using namespace std;
+
+class Solution {
+public:
+	int reverse(int x) {
+		int output = 0;
+		char buffer[33] = { 0 };
+		char tmp = 0;
+		int bufferLength = 0;
+		int xLen = 0;
+		int i = 0;
+		string outputStr;
+		bool symbolFlag = false;
+
+		cout << x << endl;
+
+		if (x > INT_MAX)
+		{
+			return 0;
+		}
+
+		if (x < 0)
+		{
+			x = x * (-1);
+			symbolFlag = true;
+		}
+
+		outputStr = to_string(x);
+		bufferLength = outputStr.length();
+
+		//交换字符串中的元素
+		for (i = 0; i < bufferLength / 2; i++) {
+			tmp = outputStr.at(i);
+			outputStr.at(i) = outputStr.at(bufferLength - i - 1);
+			outputStr.at(bufferLength - i - 1) = tmp;
+		}
+
+		for (i = 0; i < outputStr.length(); i++)
+		{
+			buffer[i] = outputStr.at(i);
+		}
+
+		//如果转化后的数组越界，则直接返回0，默认32位有符号整数范围-2147483648 ~ 2147483648。
+
+		output = atoi(buffer);
+		if (output >= INT_MAX)
+		{
+			output = 0;
+		}
+
+		if (symbolFlag == true)
+		{
+			output = output * (-1);
+		}
+		cout << output << endl;
+		return output;
+	}
+};
+--------------------------------------------------------------------------------
