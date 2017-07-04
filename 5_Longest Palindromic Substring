@@ -7,5 +7,61 @@
 第一感觉这种方法有点暴力，无论如何，先做出来再说。
 代码实现
 --------------------------------------------------------------------------------
+#include <iostream>
+#include <vector>
 
+using namespace std;
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        string outputStr = "";
+        string outputTmp = "";
+        unsigned long outputStrLen = 0;
+        unsigned long strLen = s.length();
+        bool palindromeFlag = false;
+
+        
+        outputStr = s.at(0);
+
+        if (strLen == 1) {
+            outputStr = s;
+            return outputStr;
+        }
+
+        for (unsigned long i = 0; i < strLen; i++) {
+            for (unsigned long j = strLen - 1; j > i; j--) {
+                if (s.at(i) == s.at(j)) {
+                    unsigned long i_back = i;
+                    unsigned long j_back = j;
+                    while (i_back <= j_back) {
+                        if (s.at(i_back) == s.at(j_back)) {
+                            palindromeFlag = true;
+                        }
+                        else {
+                            palindromeFlag = false;
+                            break;
+                        }
+                        i_back++;
+                        j_back--;
+                    }
+
+                    if (palindromeFlag == true) {
+                        outputTmp = s.substr(i, j - i + 1);
+                        if (outputTmp.length() > outputStrLen) {
+                            outputStrLen = outputTmp.length();
+                            outputStr = outputTmp;
+                        }
+                    }
+
+                    if (outputStr.length() == s.length()) {
+                        return outputStr;
+                    }
+                }
+            }
+        }
+
+        return outputStr;
+    }
+};
 --------------------------------------------------------------------------------
