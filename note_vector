@@ -1,0 +1,51 @@
+在面向对象的编程中，经常会用到vector，我还不是很了解，下面的今天的学习笔记。
+在用到vector的时侯，要包括头文件
+
+#include <vector>
+std::vector<int>v; //declares a vector of integers
+
+
+或者用下面的方式来使用
+#include <vector>
+using namespace std;
+
+vector<int>v;
+
+一般小的项目才在头文件中使用using namespace std;在大型项目中一般都是明确的制定名字空间，这样
+可以减少文件的大小。
+
+std::vector<T>v; it's a template class that will wrap an array of Ts.T stands for
+any data type, built-in, or user-defined class.
+
+we can access the individual Ts simply by writing v[0], v[1].exactly like C-style
+在大型的项目中，一般用typedef 来定义，不要使用宏
+typedef std::vector<int> int_vec_t;
+
+int_vec_t v;
+
+
+普通的数组使用：use the static and dynamic array:
+size_t size = 10;
+int sarray[10];             //static array;
+int *darray = new int[10];  //dynamic array;
+
+for (int i = 0; i < size; i++) {
+  sarray[i] = i;
+  darray[i] = i;
+}
+
+delete[] array;//don't forget to delete darray when you're done.
+
+
+
+use vector:
+#include <vector>
+size_t size = 10;
+std::vector<int> array(10);
+
+for (int i = 0; i < size; i++) {
+  array[i] = i;
+}
+
+使用vector的好处是，既不需要静态数组在申请时制定数组的大小，也不需要动态数组在使用完后释放内存。
+访问vector中的元素使用的是 [index] 操作，和C语言一样，这个index可能导致越界。所以需要手动检查。
