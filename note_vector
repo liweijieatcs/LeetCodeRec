@@ -36,8 +36,6 @@ for (int i = 0; i < size; i++) {
 
 delete[] array;//don't forget to delete darray when you're done.
 
-
-
 use vector:
 #include <vector>
 size_t size = 10;
@@ -49,3 +47,125 @@ for (int i = 0; i < size; i++) {
 
 使用vector的好处是，既不需要静态数组在申请时制定数组的大小，也不需要动态数组在使用完后释放内存。
 访问vector中的元素使用的是 [index] 操作，和C语言一样，这个index可能导致越界。所以需要手动检查。
+对于vector来说还定义了 at(index) 访问操作，这个操作是要检查index是否有效的，如果无效的index,
+vector会抛出异常std::out_of_range.
+
+vector是标准的容器，访问容器中的序列，可以用迭代器iterators.
+
+用vector来存储字符
+#include <vector>
+#include <iostream>
+
+std::vector<char> array;
+char c = 0;
+while(c != 'x') {
+  std::cin >> c;
+  array.push_back(c);
+}
+当使用push_back时，vector的空间也会被占完，这时vector的实现机制会自动的分配更多的空间，这里存在
+复制数据到新的空间的操作，会浪费点时间。为了避免vector的重复申请空间，我们在使用是可以制定vector的
+构造函数，用到的方法是reserve()
+
+比如在上面的例子，定义了vector变量，就制定空间的大小
+array.reserve(10);
+
+区别一下两段代码：
+snip1:
+std::vector<int>v(10);
+
+snip2:
+std::vector<int>v;
+v.reserve(10);
+
+片段1:定义了一个包含10个整数的vector，并且初始化为0，调用了10次构造函数
+片段2:定义了一个空的vector，让这个vector申请了10个整数的空间，并不初始化。如果没有整数放进去。
+则不会调用其构造函数
+
+#include <vector>
+#include <iostream>
+
+std::vector<int> array;
+int i = 999;
+array.reserve(10); //make room for 10 elements
+array.push_back(i);
+std::cout << array.capacity() << std::endl;   //outpur:10
+std::cout << array.size() << std::endl;       //output:1
+
+正确的扩大容器的方法是调用resize()方法。还有一种方法是push_back().
+
+
+vector的访问，从c语言开始引导，看下面的例子：求平均值
+#include <iostream>
+double mean(doule* array, size_t n) {
+  double m = 0;
+  for (size_t i = 0; i < n; i++) {
+    m += array[i];
+  }
+  return m/n;
+}
+
+int main() {
+  double a[] = {1, 2, 3, 4, 5};
+  std::cout << mean(a, 5) << endl;
+  return 0;
+}
+
+vector存储其变量是在连续的块中，所以用vector，传递第一个元素的地址过去也是可以的。
+int main() {
+  std::vector<double> a;
+  a.pusu_back(1);
+  a.pusu_back(2);
+  a.pusu_back(3);
+  a.pusu_back(4);
+  a.pusu_back(5);
+  std::cout << mean(&a[0], 5) << std::endl;
+  return 0;
+}
+
+可以用数组来初始化vector
+double[] = {1, 2, 3, 4, 5};
+std::vector<double> a(p, p+5);
+
+Two things are important to note: the array is copied and it not somehow go into
+the possession of the newly created vector, and the range we supply is from the
+first element to one past the last element in the array. [first, one-past-last)
+
+vector 的指针是iterators.
+iterators are the way of standard library models a common interface for all containers:
+vector, list, set, dequeue, and so on.
+
+example:
+int main(int argc, const char * argv[]) {
+    vector<double> a;
+    vector<double>::const_iterator i;
+
+    a.push_back(1);
+    a.push_back(2);
+    a.push_back(3);
+
+    for (i = a.begin(); i != a.end(); ++i) {
+        cout << (*i) << endl;
+    }
+
+    return 0;
+}
+
+
+vector 的方法：
+assign()
+
+element access
+
+std::vector<int> v;
+v.push_back(999);
+
+// following statements are equivalent:
+int i = v.front();
+int i = v[0];
+int i = v.at(0);
+int i = *(v.begin());
+// following statements are equivalent:
+int j = v.back();
+int j = v[v.size()-1];
+int j = v.at(v.size()-1);
+int j = *(v.end()-1);
