@@ -1,0 +1,123 @@
+理解题目：正则表达式的匹配
+'.' Matches any single character.
+.是匹配任意一个字母
+'*' Matches zero or more of the preceding element.
+*是匹配0个多个之前的所有字母
+
+The matching should cover the entire input string (not partial).
+
+The function prototype should be:
+bool isMatch(const char *s, const char *p)
+
+Some examples:
+isMatch("aa","a") → false
+isMatch("aa","aa") → true
+isMatch("aaa","aa") → false
+isMatch("aa", "a*") → true
+isMatch("aa", ".*") → true
+isMatch("ab", ".*") → true
+isMatch("aaaab", "c*a*b") → true
+
+解题思路：
+1:第个是需要匹配的字符串，是固定的。第2个才是模版。
+2:用第一个字符串的第一个字母在模版模版中找，可能有三种情况
+  （1）：找到相同的字符,继续往后找。
+  （2）：找到*，需要返回去找之前所有找过的字符串是否有可以匹配的字符。
+  （3）：找到.，则跳过这个字符。
+3:直到需要被匹配的字符串中所有字符找完毕，如果匹配成功返回true，如果不成功返回false。
+
+
+分析遇到*号：
+1:*不可能出现在第一个位置，这样他无法区匹配前面的字符。所以匹配到的原字符串也不能是第一个字母。
+2:*号前面不能是*号，只能是字母或者.，
+（1）如果是字母，则要求原字符串正在匹配的字符和他之前的一个字符相同。
+    这时对原字符串的处理是，跳过和之前相同的字符，直到下一个不同的字符。跳到下一个不通过的字符后，
+    匹配的模版也对应的往后跳。
+（2）如果是.处理的方法是相同的。
+解题:没有通过，在网上去找了答案，用dp来解决。不过也把自己写得代码放上来。
+
+对其中的isMath("ab",".*")->true,感到不解。
+--------------------------------------------------------------------------------
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        bool matchResult = false;
+        string pString = "";
+        unsigned long sLen = s.length();
+        unsigned long pLen = p.length();
+        unsigned int sIndex = 0;
+        unsigned int pIndex = 0;
+        char sStrBack = ' ';
+
+        for (unsigned int i = sIndex; i < sLen; i++) {
+            for(unsigned int j = pIndex; j < pLen; j++) {
+                pString += p.at(j);
+                //step charater
+                if (s.at(i) == p.at(j)) {
+                    if (i == sLen - 1) {
+                        return true;
+                    }
+                    sStrBack = s.at(i);
+                    pIndex++;
+                    break;
+                }
+                //match any single character
+                else if (p.at(j) == '.') {
+                    if (i == sLen - 1) {
+                        return true;
+                    }
+                    sStrBack = s.at(i);
+                    pIndex++;
+                    break;
+                }
+                //match one or more before charcter, find previous character
+                //before * is . and character, not another *.
+                else if (p.at(j) == '*') {
+                    //process source pattern, till the different character
+                    if ((p.at(j - 1) == '.') && (pLen == 2)) {
+                        return true;
+                    }
+                    while(sStrBack == s.at(i)) {
+                        if (i == sLen -1) {
+                            return true;
+                        }
+                        sStrBack = s.at(i);
+                        i++;
+                    }
+                    pIndex++;
+
+                }
+                else {
+                    sIndex = 0;
+                    pIndex++;
+                }
+            }
+        }
+    return matchResult;
+    }
+};
+--------------------------------------------------------------------------------
+
+
+用dp 方法解决
+--------------------------------------------------------------------------------
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int m = s.length(), n = p.length();
+        vector<vector<bool> > dp(m + 1, vector<bool> (n + 1, false));
+        dp[0][0] = true;
+        for (int i = 0; i <= m; i++)
+            for (int j = 1; j <= n; j++)
+                if (p[j - 1] == '*')
+                    dp[i][j] = dp[i][j - 2] || (i > 0 && (s[i - 1] == p[j - 2] || p[j - 2] == '.') && dp[i - 1][j]);
+                else dp[i][j] = i > 0 && dp[i - 1][j - 1] && (s[i - 1] == p[j - 1] || p[j - 1] == '.');
+        return dp[m][n];
+    }
+};
+--------------------------------------------------------------------------------
