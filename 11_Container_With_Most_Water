@@ -1,0 +1,63 @@
+读懂题：
+在x坐标上放置一些点，这些点是正整数，这些点同x轴的连线，组成了桶装形，求这些桶装形能装的最大米面积。
+
+理解：
+面积是长*宽，首先是他们能组成求面积的封闭的图形。问题就是
+1:找到能组成封闭矩形的点。
+2:求所有封闭矩形中，面积最大的那个。
+
+组成封闭矩形是由最短的边决定的。长的那条边可以包含短的那条边。比如（2，2）和（1，1）可以组成一个矩形。
+那他们的面积就是（2-1）*1.
+同理（2，2）和（3，3）也可以组成矩形，他们的面积是（3-2）*1.
+
+从两边往中间收缩。
+1:假设最大的面积就是第一个点（i）和最后一个点（j）之间的包含的面积。
+2:固定i从后往前遍历一遍j，找到最大的面积。存储起来。
+3:i向后移动一个点，再从后网前遍历一遍j，找到最大面。比较第2步骤和第3步骤得到的最大面积。
+4:移动结束的条件是i < j,如果i=j时，不能组成矩形，i>j后，重复了。
+
+代码实现：自己写了一版本，加上网上找了一个版本，自己写的版本通过case但是超时错误。
+--------------------------------------------------------------------------------
+
+using namespace std;
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+#if 1
+        unsigned long area = 0;
+        unsigned long maxArea = 0;
+        int i = 0;
+        unsigned long j = 0;
+        unsigned long size = height.size() - 1;
+
+        for (i = 0; i < size; i++) {
+            for (j = size; j > i; j--) {
+                if (i < j) {
+                    area = min(height[i] , height[j]) * (j - i);
+                    if (area > maxArea) {
+                        maxArea = area;
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+        }
+        return (int)maxArea;
+#endif
+
+#if 0
+        int water = 0;
+        int i = 0;
+        unsigned long j = height.size() - 1;
+        while (i < j) {
+            int h = min(height[i], height[j]);
+            water = max(water, (j - i) * h);
+            while (height[i] <= h && i < j) i++;
+            while (height[j] <= h && i < j) j--;
+        }
+        return water;
+#endif
+    }
+};
+--------------------------------------------------------------------------------
