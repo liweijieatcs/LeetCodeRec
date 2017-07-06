@@ -1,0 +1,45 @@
+第17道题目：
+给出了一个电话的键盘，0，1，2，3，4，5，6，7，8，9，*，#按键下面有字母
+0->空
+1->空
+2->abc
+3->def
+4->ghi
+5->kjl
+6->mno
+7->pqrs
+8->tuv
+9->wxyz
+*->空
+#->空
+
+思路：
+第一感觉可以用暴力解法。
+1:将上面的存在字符串数组里面
+2:依据输入的参数在从数组中提取字符串组成新的字符串。
+3:对新的字符串进行for循环遍历，将遍历出来的字符放在vector中返回。
+
+这是一个可以实现的方案，但是估计会超时。
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+      vector<string> result;
+      if(digits.empty()) return vector<string>();
+      static const vector<string> v = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+      result.push_back("");   // add a seed for the initial case
+      for(int i = 0 ; i < digits.size(); ++i) {
+          int num = digits[i]-'0';
+          if(num < 0 || num > 9) break;
+          const string& candidate = v[num];
+          if(candidate.empty()) continue;
+          vector<string> tmp;
+          for(int j = 0 ; j < candidate.size() ; ++j) {
+              for(int k = 0 ; k < result.size() ; ++k) {
+                  tmp.push_back(result[k] + candidate[j]);
+              }
+          }
+          result.swap(tmp);
+      }
+      return result;
+    }
+};
