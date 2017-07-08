@@ -34,3 +34,87 @@ A solution set is:
 接下来重复以上的步骤，固定住次大的数，重复以上步骤，直到固定的数从最大到最小，寻找结束。
 
 分析都这么复杂，感到复杂度不能满足要求。
+
+
+如果从两头分析不行，能不能从中间开始，先固定住中间的数。
+1:首先得到的排序后的数组
+s=[a1,a2,a3,...am-1,am,am+1,...an-2,an-1,an];
+1:从中间的am开始，先求出am-1 + am + am+1 = target1,
+2:如果target1小于目标target则在am+1---an之间找。如果找到了，则左移am-2,继续在右寻找，直到an.
+3:如果target1大于目标target则在am-1---a1之间找。如果找到了，则右移am+2,继续向左寻找，直到a1.
+
+暴力寻找，因为要找4个数组，用4重for循环。
+
+从最小的头开始
+1:先将数组排序
+2:选择最小的三个数相加a1+a2+a3=target1,该处的target一定是最小的target,在从后面的找一位数即可。
+
+暴力解法
+1:列出所有的4个数的组合。
+2:再将每个组合进行相加，如果等于target的则留下，不等于的则抛弃。
+
+
+代码实现：
+1:先排序
+2:最小的两个循环，然后剩下的左右两边寻找。
+--------------------------------------------------------------------------------
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> total;
+        unsigned int n = nums.size();
+
+        if (n < 4) {
+            return total;
+        }
+        sort(nums.begin(), nums.end());
+
+        for(int i = 0; i < n - 3; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            if (nums[i] + nums[2] + nums[3] > target) {
+                break;
+            }
+
+            if (num[i] + num[n - 3] + nums[n - 2] + nums[n - 1]) {
+                continue;
+            }
+
+            for (size_t j = 0; j < n - 2; j++) {
+                if (j > j+ 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+                if (nums[i] + nums[j] + nums[j + 1] + nums[j + 2] > target) {
+                    break;
+                }
+                if (nums[i] + nums[j] + nums[n - 2] + nums[n - 1]) {
+                    continue;
+                }
+
+                unsigned long left = j + 1;
+                unsigned long right = n - 1;
+
+                while (left < right) {
+                    int nums = nums[left] + nums[right] + nums[i] + nums[j];
+                    if (sum < target) {
+                        left++;
+                    }
+                    else if (sum > target) {
+                        right--;
+                    }else {
+                        total.push_back(vector<int>{nums[i], nums[j], nums[left], nums[right]});
+                        do {
+                            left++;
+                        } while(nums[left] == nums[left-1] && left < right);
+                        do {
+                            right--;
+                        } while(nums[right] ==nums[right+1] && left < right);
+                    }
+                }
+            }
+        }
+    }
+}
+--------------------------------------------------------------------------------
