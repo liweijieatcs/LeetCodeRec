@@ -1,0 +1,29 @@
+第一步还是读题：
+Merge two sorted linked lists and return it as a new list.
+The new list should be made by splicing together the nodes of the first two lists.
+
+合并两个排序好的链表，并作为一个新的链表返回。
+新的链表应该由前两个链表的节点组成。
+
+分析：
+1:第一步将两个链表组成一个新的链表。vector
+2:对新的链表进行排序。
+
+貌似复杂度高。
+
+直接看的讨论：利用递归来实现。
+class Solution {
+public:
+    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
+        if(l1 == NULL) return l2;
+        if(l2 == NULL) return l1;
+
+        if(l1->val < l2->val) {
+            l1->next = mergeTwoLists(l1->next, l2);
+            return l1;
+        } else {
+            l2->next = mergeTwoLists(l2->next, l1);
+            return l2;
+        }
+    }
+};
