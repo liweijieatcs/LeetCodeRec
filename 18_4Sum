@@ -1,0 +1,32 @@
+Given an array S of n integers, are there elements a, b, c, and d in S
+such that a + b + c + d = target? Find all unique quadruplets in the array
+which gives the sum of target.
+
+Note: The solution set must not contain duplicate quadruplets.
+
+For example, given array S = [1, 0, -1, 0, -2, 2], and target = 0.
+
+A solution set is:
+[
+  [-1,  0, 0, 1],
+  [-2, -1, 1, 2],
+  [-2,  0, 0, 2]
+]
+
+先读懂题目：
+给出一个一维数组，求这个数组的组合，使得组合中的数字加起来等于给出的tatget数字。
+
+
+思路：将给出的数组进行排序，从两边往中间累加。
+将数组进行排序得到s = [a1,a2,a3,a4.......an-2,an-1,an]
+1:将数组进行排序后得到s，先固定选择最小的数a1和最大的数an相加与给出的目标进行比较。
+2:用两个index分别选择次小数a2和次大的数an-1。
+3:如果首尾的数和次小的数相加比目标数大，则向左移动次大的数。
+4:如果首尾的数和次大的数相加比目标数小，则向右移动次小的数。
+4:结束条件是，向左移动次大的数和次小的数的index重合。这样可以找出一组或者多组组合。
+5:第一轮结束后，但是这一轮中固定了最小的数和最大的数。
+
+下一轮势必还要固定次小的数和最大的数，重复执行上面的1-5步骤。
+从次小的数a2次大的数an-1依次固定住，寻找他们中间的数。
+在以上的寻找寻找过程中，有一个一直固定的数，就是最大的数。很明显没有找完。但是可以确定，包含了
+最大数的组合已经被全部找完了。
