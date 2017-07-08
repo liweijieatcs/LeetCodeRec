@@ -1,0 +1,145 @@
+
+from https://www.sigmainfy.com/blog/4sum-problem-analysis-different-time-complexity.html
+
+4Sum Problem Analysis: O(N^2) VS O(N^2logN) VS O(N^3)
+
+Overview
+
+I intended to do a thorough analysis for K sum problems, so here we go for the 4sum problem. The common approach is to reduce it to 3sum and then to 2sum with O(N^3) time, this approach is discussed and implemented. The hash based approach trying to reduce the time complexity is analyzed too and we can achieve different time complexity O(N^2) or O(N^2logN) depending on tree hash map or unordered hash (copyright @sigmainfy) map we use. Again, comments are highly appreciated and that could help the readers and me to find anything we might miss!
+
+4Sum Problem Definition:
+
+Given an array S of n integers, are there elements a, b, c, and d in S such that a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
+
+Note:
+
+Elements in a quadruplet (a,b,c,d) must be in non-descending order. (ie, a ≤ b ≤ c ≤ d)
+The solution set must not contain duplicate quadruplets.
+For example, given array S = {1 0 -1 0 -2 2}, and target = 0.
+
+A solution set is:
+(-1,  0, 0, 1)
+(-2, -1, 1, 2)
+(-2,  0, 0, 2)
+4Sum Problem Algorithm Analysis
+
+1) Reduce the problem into 3Sum and then 2Sum:
+this is similar trick we use as in “3Sum Problem Analysis: Handling Duplicates Without Using Set“.
+That is, we linear scan the sorted array, and when we process the current element A[i],
+we just do 3sum in the rest of the array starting from i+1,
+the next would be exactly the same with 3sum problem,
+same tricks to compare the current value with the previous value is used to
+avoid or remove the duplicate quadruplets in the final results,
+and we don’t need to do any filtering using say Set at the end.
+The sorting would take O(NlogN) and the total time would be O(N^3) which is not difficult to figure out,
+the following is the implementation and it is accepted by the leetcode OJ:
+
+class Solution {
+public:
+    vector< vector<int> > fourSum(vector<int> &num, int target) {
+		vector<vector<int> > vecQuadruplets;
+		if (num.size() < 4) return vecQuadruplets;
+
+		vector<int> quadruplet(4, 0);
+		sort(num.begin(), num.end());
+		int lastIndex4 = num.size() - 3;
+		int lastIndex3 = num.size() - 2;
+		for (int i = 0; i < lastIndex4; ++i) {
+			quadruplet[0] = num[i];
+			if (i > 0 && num[i] == num[i - 1]) continue;
+			for (int j = i + 1; j < lastIndex3; ++j) {
+				if (j > i + 1 && num[j] == num[j - 1])
+                    continue;
+
+				quadruplet[1] = num[j];
+				int p = j + 1, q = num.size() - 1;
+				while (p < q) {
+					if (p > j + 1 && num[p] == num[p - 1]) {
+						++p;
+						continue;
+					}
+					int sumOver = num[i] + num[j] + num[p] + num[q];
+					if (sumOver == target) {
+						quadruplet[2] = num[p++];
+						quadruplet[3] = num[q--];
+						vecQuadruplets.push_back(quadruplet);
+					}
+					else if (sumOver < target) {
+						++p;
+					}
+					else {
+						--q;
+					}
+				}
+			}
+		}
+		return vecQuadruplets;
+    }
+};
+
+2) Hash approach:
+here I propose the following hash approach and depending on which data structure you use,
+the time complexity would be different, could be O(N^2logN) or O(N^2). Here we go:
+
+Basic Idea:
+
+We insert all the pairs formed from any two out of the input into a hashmap,
+let’s call it HashTable, this step takes O(N^2 * t) where t is the time complexity
+for the hash insertion operation. I will explain t a bit later.
+
+HashTable is such a table: each entry in the this hash table is like this,
+HashTable[hashvalue] = list,
+where the list is a linked list structure contains all the pairs the sum of which equal to the key value.
+So the next thing we want to do is to find the two sum which equal to the given target
+among all the pair sum values which are just the unique keys in our hashmap HashTable.
+This involves iterate all the whole hash map.
+The last step is to iterate the HashTable, and for each key value say we currently process Key A,
+we need to check (B = target – A) whether B exist in the hash table or not,
+if so, then we have potential candidates of two pair of pairs (i.e., a quadruplets),
+one of the pair picked from list HashTable[A] and the other picked from list HashTable[B].
+
+Remarks:
+
+I give some remarkable things about the above steps and time complexity
+would be formalized at the end after several details are discussed.
+
+We need to keep the original index pair in the list at each key slot of the hasthtable,
+i.e., HashTable[PairSumValue] = list, the list contains pairs, and pair<int, int> = (a, b) ,
+that is  a and b are original index such that num[a] + num[b] = PairSumValue.
+This is because we don’t want to use the same element in the original array more than once.
+For example, in our setting, we might pick two pairs (1, 2) and (2, 3) in step 4
+because num[1] + num[2] + num[2] + num[3] = target,
+if we just store values, we cannot identify this is an invalid  quadruplet,
+if we store index instead, obviously (1, 2, 2, 3) is not a legal quadruplet in our setting,
+we only need to make sure (copyright @sigmainfy) all the indexes in quadruplets are different
+and note we shall return values rather than index which is easy to do conversion.
+This additional checking takes O(1) time.
+As I said at the beginning, the type of the hashmap affects the time complexity,
+in step 4, we actually need to linear scan all the keys,
+for tree based map which is ordered map it is straightforward,
+for unordered hash map, we could do this: in step 1, when we make the hashmap,
+at the same time, we push all the unique pair values into a separate vector or array,
+that is, each time we got a pair sum which is not in the hashmap yet,
+we push this pair sum value into the separate vector, at the end of step 1,
+this vector (let’s call v1) would of size O(N^2),
+we iterate this vector v1 instead of the unordered hash map and the access to the unordered hash map takes O(1).
+Otherwise, we will have to scan all the memory space in the unordered hashmap to iterate all the pair sum values,
+which would take O(M) where M is the size of the unordered hashmap and it could be much larger than N^2.
+Time complexity: time complexity depends on which kind of hash map we use.
+With all the details in our mind, If we use unordered hash map,
+then the value t would be t = O(1) and if we use tree map like red-black tree which is ordered map,
+then t = O(logN), so for unordered map, step 1 takes O(N^2), step 4 takes O(N^2),
+and the total time would be O(N^2);
+For tree map which is ordered, step 1 takes O(N^2logN)
+because insert takes O(logN) and steps 4 takes O(N^2logN) too because access the key takes O(logN).
+Note to really implement the hash approach,
+I think it is quite sophysicated handling all the details.
+The time complexity might still be arguable, any comments are welcome and highly appreciated!!!
+
+Conclusion:
+
+To summarize, I have the sorting approach to reduce the 4sum problem into 3sum problem and then 2sum, it takes O(N^3) time.
+And I discussed my way to tackle this problem by using hash and discussed the associated sophysicated details,
+the time complexity depends on the types of the hash table we use.
+
+Written on September 22, 2014
