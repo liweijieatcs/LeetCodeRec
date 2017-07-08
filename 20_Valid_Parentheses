@@ -1,0 +1,117 @@
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+The brackets must close in the correct order, "()" and "()[]{}" are all valid but "(]" and "([)]" are not.
+
+读题：
+给出一个包含(),{},[]的字符串，判断输入的字符串是否有效。
+
+分析：
+1:如果字符串有效，则肯定是匹配出现的。
+2:先定义这些字符串的数组，存储这些字符串作为匹配项。
+3:在去查找输入的字符串，如果有与匹配项的字符串就执行入栈操作。并存储栈顶的内容，如果遇到和栈里面匹配的字符串就执行出栈操作。
+4:最后栈为空，则是有效的输入。
+
+第二种方案：
+给（）{}[]分别标上权制，
+( = 1
+）= -1
+{ = 2
+} = -2
+[ = 3
+] = -3
+
+遍历字符串，每遍历到上面的一种就对其求和，当遍历完整个字符串时，如果统计的和是0，则他们是匹配的。如果不是0，则不匹配。
+class Solution {
+public:
+    bool isValid(string s) {
+        bool status = false;
+        int sum = 0;
+        for (unsigned long i = 0; i < s.length(); i++) {
+            switch (s.at(i)) {
+                case '{':
+                    sum += 1;
+                    break;
+                case '}':
+                    sum -= 1;
+                    break;
+                case '[':
+                    sum += 2;
+                    break;
+                case ']':
+                    sum -= 2;
+                    break;
+                case '(':
+                    sum += 3;
+                    break;
+                case ')':
+                    sum -= 3;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (sum == 0) {
+            status = true;
+        }
+        return status;
+    }
+};
+上传程序，有测试用例不过，还是没有仔细看题目，有一种情况是“([)]”,结果统计的结果也是0，但是也是错误，看来自能用栈来解决。
+
+class Solution {
+public:
+    bool isValid(string s) {
+        bool status = false;
+        unsigned long len = s.length();
+        //如果是奇数则直接返回
+        if (len % 2 != 0) {
+            return status;
+        }
+
+        stack<char> st;
+        //cout << "st.size():" << st.size() << endl;
+        for (unsigned long i = 0; i < len; i++) {
+            switch (s.at(i)) {
+                case '(':
+                case '{':
+                case '[':
+                    st.push(s.at(i));
+                    break;
+                case '}':
+                    if (i == 0) {
+                        return false;
+                    }
+                    if (st.top() == '{') {
+                        st.pop();
+                    } else {
+                        return false;
+                    }
+                    break;
+                case ']':
+                    if (i == 0) {
+                        return false;
+                    }
+                    if (st.top() == '[') {
+                        st.pop();
+                    }else {
+                        return false;
+                    }
+                    break;
+                case ')':
+                    if (i == 0) {
+                        return false;
+                    }
+                    if (st.top() == '(') {
+                        st.pop();
+                    } else {
+                        return false;
+                    }
+                    break;
+            }
+        }
+        if (st.size() == 0) {
+            status = true;
+        }
+        return status;
+    }
+};
