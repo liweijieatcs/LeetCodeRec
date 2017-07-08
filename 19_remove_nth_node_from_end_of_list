@@ -1,0 +1,71 @@
+题目分析：
+移除链表的倒数第n个点。
+
+常规的想法：
+1:不遍历链表，怎么链表的长度呢？首先当然是遍历链表，知道长度len。然后找到要删除的点len,将该点删除
+
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        int r = 0;
+        auto p = head;
+        // first pass - get the length
+        while (head != NULL) {
+            r ++;
+            head = head->next;
+        }
+        // removing the head
+        if (r == n) {
+            p = p->next;
+            return p;
+        }
+        head = p;
+        // second pass, locate the node
+        for (int i = 0; i < r - n - 1; i ++) {
+            head = head->next;
+        }
+        // and delete it
+        head->next = head->next->next;
+        return p; // stored head
+    }
+};
+
+
+
+下面的代码大同小异，特别注意删除第n个节点的判断是length == (maxLength - n + 1
+
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode* temp = head;
+        ListNode* previous = head;
+
+        int maxLength = 0;
+        int length = 0;
+
+        //求出链表的长度
+        while (temp != NULL) {
+            maxLength++;
+            temp = temp->next;
+        }
+
+        //如果删除头节点
+        temp = head;
+        if (n == maxLength) {
+            return temp = temp->next;
+        }
+
+        //删除第n个节点
+        temp = head;
+        while (temp != NULL) {
+            length++;
+            if (length == (maxLength - n + 1)) {
+                previous->next = temp->next;
+                break;
+            }
+            previous = temp;
+            temp = temp->next;
+        }
+        return head;
+    }
+};
