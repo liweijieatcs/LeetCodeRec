@@ -37,11 +37,14 @@ For example, the next permutation of [3, 2, 1] is [1, 2, 3].
 
 2:Find the largest index l greater than k such that nums[k] < nums[l].
 3:Swap the value of nums[k] with that of nums[l].
-4:Reverse the sequence from nums[k + 1] up to and including the final element nums[nums.size() - 1].
+4:Reverse the sequence from nums[k + 1] up to end including the final element nums[nums.size() - 1].
 
 Quite simple, yeah? Now comes the following code, which is barely a translation.
 
-Well, a final note here, the above algorithm is indeed powerful --- it can handle the cases of duplicates! If you have tried the problems Permutations and Permutations II, then the following function is also useful. Both of Permutations and Permutations II can be solved easily using this function. Hints: sort nums in ascending order, add it to the result of all permutations and then repeatedly generate the next permutation and add it ... until we get back to the original sorted condition. If you want to learn more, please visit this solution and that solution.
+Well, a final note here, the above algorithm is indeed powerful --- it can handle the cases of duplicates!
+If you have tried the problems Permutations and Permutations II, then the following function is also useful.
+Both of Permutations and Permutations II can be solved easily using this function.
+Hints: sort nums in ascending order, add it to the result of all permutations and then repeatedly generate the next permutation and add it ... until we get back to the original sorted condition. If you want to learn more, please visit this solution and that solution.
 
 
 class Solution {
@@ -62,3 +65,8 @@ public:
         reverse(nums.begin() + k, nums.end());
     }
 };
+
+总结解法：
+1:从右往左找到第一个递交的数，这时大的记为a[i],小的记为a[i-1].
+2:从a[i]往右找到最后一个比a[i-1]大的数，记做a[j],交换a[i-1]和a[j].
+3:将数组的第i项目到最大项进行升序排列，为最小的临近给定数组的下一个字典排列。
