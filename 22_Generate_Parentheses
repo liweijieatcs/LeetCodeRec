@@ -1,0 +1,59 @@
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+For example, given n = 3, a solution set is:
+
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+
+读题：
+给出n个括号，写一个函数，求出所有可能正确匹配的符号。
+
+1：第一个字符串肯定是‘（’，最后一个肯定是‘）’。这种想法还是不正确。
+想到之前做的一道题目，判断括号是否合法。应用到这道题目上。
+1：求出所有括号的组合。
+2：去除掉不匹配的项，然后将匹配的项目返回到vector.
+求出所有的组合，这样复杂度是不是高。
+假设有n对括号，则求出组合需要运算n*n-1*n-2*...*1 = n！
+去除掉相同的，需要用到查账 n + n-1 + n-2 +... + 1 = n(n-1)/2  也是一个集几何级数。
+
+复杂度肯定不行。
+
+换思路吧：递归和回溯解决
+
+class Solution {
+public:
+
+vector<string> result;
+vector<string> generateParenthesis(int n) {
+    helper("", n, 0);
+    return result;
+}
+
+/*  this hepler function insert result strings to "vector<string> result"
+	When number of '(' less than "n", can append '(';
+  当左括号的数小于n时，就添加左括号。
+	When number of '(' is more than number of ')', can append ')';
+  当左括号比有括号的数大时，就添加右括号。
+	string s : current string;
+	int leftpare_need : number of '(' that have not put into "string s";
+	int moreleft : number of '(' minus number of ')' in the "string s";
+*/
+
+void helper(string s, int leftpare_need, int moreleft)
+{
+	if(leftpare_need == 0 && moreleft == 0)
+	{
+	    result.push_back(s);
+	    return;
+	}
+	if(leftpare_need > 0)
+		helper(s + "(", leftpare_need - 1, moreleft+1);
+	if(moreleft > 0)
+		helper(s + ")", leftpare_need, moreleft - 1);
+  }
+};
