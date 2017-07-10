@@ -106,3 +106,10 @@ should be valid parentheses.
 If the stack is empty, the whole input
 string is valid. Otherwise, we can scan the stack to get longest
 valid substring as described in step 3.
+
+
+editorial solution  居然有4种解法，我kao
+1:brute force [time limit exceeded]
+2:using dynamic programming
+3:using stack
+4:without extra space(没有用多余的空间就需要用多余的时间，逃不掉)
