@@ -1,0 +1,53 @@
+Given a sorted array, remove the duplicates in place such that each element appear only once and return the new length.
+
+Do not allocate extra space for another array, you must do this in place with constant memory.
+
+For example,
+Given input array nums = [1,1,2],
+
+Your function should return length = 2, with the first two elements of nums being 1 and 2 respectively.
+It doesn't matter what you leave beyond the new length.
+
+给定一个排序的数组，删除重复的位置，使每个元素只显示一次并返回新的长度。
+不要为另一个数组分配额外的空间，您必须使用常量内存来执行此操作。
+例如，
+给定输入数组nums = [1,1,2]，
+你的函数应该返回length = 2，num的前两个元素分别为1和2。 无论你离开新的长度什么都不重要。
+
+分析：
+1：先排序数组
+2：再遍历数组，从数组第一个元素开始，并且将概述作为比较基数，如果遇到后面的和前面的相同则跳过该元素
+3：如果遇到不相同的，则更新比较基数，统计数加1.
+
+class Solution {
+public:
+	int removeDuplicates(vector<int>& nums) {
+
+		if (nums.size() == 0)
+		{
+			return 0;
+		}
+
+		int cnt = 1;
+		int origin = nums.at(0);
+		vector<int>newNums;
+
+		newNums.push_back(origin);
+		sort(nums.begin(), nums.end());
+		for (unsigned long int i = 0; i < nums.size(); i++)
+		{
+			if (origin != nums.at(i))
+			{
+				origin = nums.at(i);
+				newNums.push_back(origin);
+				cnt++;
+			}
+		}
+		nums.resize(newNums.size());
+		for (unsigned long int i = 0; i < newNums.size(); i++)
+		{
+			nums.at(i) = newNums.at(i);
+		}
+		return cnt;
+	}
+};
