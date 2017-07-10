@@ -1,0 +1,108 @@
+Given a string containing just the characters '(' and ')',
+find the length of the longest valid (well-formed) parentheses substring.
+For "(()", the longest valid parentheses substring is "()", which has length = 2.
+Another example is ")()())",
+where the longest valid parentheses substring is "()()", which has length = 4.
+
+给出一个包含了左括号和右括号的字符串，找到最长的有效匹配的字串。
+(()对应的有效子串长度为2，字串为()
+)()())对应的有效字串长度为4，字串为()().
+
+之前做过一个题目是判断字串是否是有效子串。
+
+
+直观的解法
+1:找出所有有效的子串，然后求出长度。
+2:找出对应长度最大的子串。
+
+但是找出所有的子串对应的复杂度太高。
+1:有效子串肯定是成对出现的，找到有效子串第一个出现左括号的地方，进行入栈。
+2:之后找到的左括号入栈，有括号出栈。
+3:出栈的次数即为有效的括号对。
+
+自己写的代码，有个边界条件没有搞定， 区分了连续的(),嵌套的(),连续和嵌套的在一起。（bug exist）
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int pushCnt = 0;
+        int popCnt = 0;
+        unsigned long sLen = s.length();
+        int maxSubstringLen = 0;
+        int substringLen = 0;
+
+        stack<char>st;
+
+        if (sLen == 0) {
+            return 0;
+        }
+        //处理嵌套的子串。
+        for (unsigned long i = 0; i < sLen; i++) {
+            if (s.at(i) == '(') {
+                st.push(s.at(i));
+                pushCnt++;
+            }
+            if (st.top() == '(') {
+                if (s.at(i) == ')') {
+                    st.pop();
+                    popCnt++;
+                    pushCnt--;
+                    substringLen = popCnt * 2;
+                    if (substringLen > maxSubstringLen) {
+                        maxSubstringLen = substringLen;
+                    }
+                }
+            }
+            if ((s.at(i) == ')') && (st.size() != 0)) {
+                popCnt = 0;
+            }
+        }
+        cout << "cnt " << maxSubstringLen << endl;
+        return maxSubstringLen;
+    }
+};
+
+这次不是自己写出来的，不爽啊
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int n = s.length(), longest = 0;
+        stack<int> st;
+        for (int i = 0; i < n; i++) {
+            if (s[i] == '(') st.push(i);
+            else {
+                if (!st.empty()) {
+                    if (s[st.top()] == '(') st.pop();
+                    else st.push(i);
+                }
+                else st.push(i);
+            }
+        }
+        if (st.empty()) longest = n;
+        else {
+            int a = n, b = 0;
+            while (!st.empty()) {
+                b = st.top(); st.pop();
+                longest = max(longest, a-b-1);
+                a = b;
+            }
+            longest = max(longest, a);
+        }
+        return longest;
+    }
+};
+
+The workflow of the solution is as below.
+
+Scan the string from beginning to end.
+If current character is '(',
+push its index to the stack. If current character is ')' and the
+character at the index of the top of stack is '(', we just find a
+matching pair so pop from the stack. Otherwise, we push the index of
+')' to the stack.
+After the scan is done, the stack will only
+contain the indices of characters which cannot be matched. Then
+let's use the opposite side - substring between adjacent indices
+should be valid parentheses.
+If the stack is empty, the whole input
+string is valid. Otherwise, we can scan the stack to get longest
+valid substring as described in step 3.
