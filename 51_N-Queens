@@ -1,0 +1,10 @@
+皇后问题，用动态规划解决。
+The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other.
+有n个皇后放在棋盘里面，问有多少种不同的方式。
+
+class Solution {
+public:
+    vector<vector<string>> solveNQueens(int n) {
+
+    }
+};
