@@ -84,5 +84,4 @@ int fib(int n) {
         f[i] = f[i-1] + f[i -1];
     }
     return f[n];
-
 }
