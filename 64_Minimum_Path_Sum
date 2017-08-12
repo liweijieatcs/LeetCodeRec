@@ -9,3 +9,6 @@ Note: You can only move either down or right at any point in time.
 然后从左下角走到右下角需要m-1,共计m+n-2.
 
 只能向下或者向右移动。
+
+首先用枚举，暴力解法，总共可以找到的所有路径，然后从中选择最小的一条。
+暴力解法的总路径条数为C(m+n-2, m-1); 可是这个数太大了。
