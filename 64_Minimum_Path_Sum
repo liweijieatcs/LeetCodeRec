@@ -1,0 +1,11 @@
+Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right which minimizes the sum of all numbers along its path.
+
+Note: You can only move either down or right at any point in time.
+
+读题：
+给出一个m*n的矩阵，里面填充非负的整数，从左上角到右下角寻找和最小的路径。
+
+从左上角到右下角要走过的路程为m-1 加上n-1 共m+n-2;因为先要从远点00走到左下角，需要走动n-1;
+然后从左下角走到右下角需要m-1,共计m+n-2.
+
+只能向下或者向右移动。
