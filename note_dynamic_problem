@@ -116,7 +116,21 @@ int search(int idx, int S) {
   if (f[idx][S] >= 0) {
     return f[idx][S]
   }
-  f[idx][S] = Math.max(search(idx + 1, S + w[idx]) + v[idx],
-  search(idx + 1, S));
+  f[idx][S] = Math.max(search(idx + 1, S + w[idx]) + v[idx], search(idx + 1, S));
   return f[idx][S];
 }
+
+//状态转移方程
+f[idx][S] = Math.max(search(idx + 1, S + w[idx]) + v[idx], search(idx + 1, S));
+
+最小的状态
+f[0][0] = 0;
+
+for (int idx = 1; idx <= n; ++idx) {
+  f[idx][0] = 0;
+  for (int j = 1; j <= W; ++j) {
+    f[idx][j] = Math.max(f[idx - 1][j - w[idx]] + v[idx], f[idx - 1][j]);
+  }
+}
+
+f[idx][S] = Math.max(f[idx + 1][S + w[idx]] + v[idx], f[idx + 1][S]);
