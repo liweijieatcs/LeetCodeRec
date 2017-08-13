@@ -85,3 +85,38 @@ int fib(int n) {
     }
     return f[n];
 }
+
+背包问题
+
+int w[n], v[n], W
+
+S <= M
+
+／／暴力解决
+int search(int idx, int S) {
+  if (S > M) {
+    return 0;
+  }
+  if (idx >= n) {
+    return 0;
+  }
+  return = Math.max(search(idx + 1, S + w[idx]) + v[idx],
+                    search(idx + 1, S));
+}
+
+处理掉冗余 f 表示处理了的状态
+
+int search(int idx, int S) {
+  if (S > M) {
+    return 0;
+  }
+  if (idx >= n) {
+    return 0;
+  }
+  if (f[idx][S] >= 0) {
+    return f[idx][S]
+  }
+  f[idx][S] = Math.max(search(idx + 1, S + w[idx]) + v[idx],
+  search(idx + 1, S));
+  return f[idx][S];
+}
